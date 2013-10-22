@@ -5,4 +5,4 @@ A simple, light framework for mass code analysis and manipulation
 
 ----
 
-To learn how o use it, please see src/github/exia/samples/.
+To learn how to use it, please see src/github/exia/samples/.

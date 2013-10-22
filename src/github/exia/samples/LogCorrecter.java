@@ -27,7 +27,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 public class LogCorrecter {
   public static void main(String[] args) {
     String[] roots = {
-        "home/sorra/workspace/myproject"
+        "/home/sorra/workspace/myproject"
     };
 
     FileFilter filter = new FileFilter() {

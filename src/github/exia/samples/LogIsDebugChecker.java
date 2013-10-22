@@ -26,7 +26,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 public class LogIsDebugChecker {
   public static void main(String[] args) {
     String[] roots = {
-        "home/sorra/workspace/myproject"
+        "/home/sorra/workspace/myprojects"
     };
     
     FileFilter filter = new FileFilter() {

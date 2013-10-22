@@ -39,6 +39,9 @@ public class FileWalker {
   }
   
   private void goThrough(File file) {
+    if (!file.exists()) {
+      throw new RuntimeException("File not exist: " + file.getPath());
+    }
     if (file.isDirectory()) {
       for (File child : file.listFiles()) {
         goThrough(child);

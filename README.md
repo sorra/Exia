@@ -8,9 +8,9 @@ A simple, light framework for mass code analysis and manipulation
 To learn how to use it, please see src/github/exia/samples/.
 
 There are examples showing you:
-1. Detect the places you have forgotten to write "logger.isDebugEnabled()"
-2. Fix a type of misuse of logger.error() API
-3. Remove unused imports
+>1. Detect the places you have forgotten to write "logger.isDebugEnabled()"
+>2. Fix a type of misuse of logger.error() API
+>3. Remove unused imports
 
 ----
 

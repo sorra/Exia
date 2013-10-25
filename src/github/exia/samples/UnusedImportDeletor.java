@@ -3,6 +3,7 @@ package github.exia.samples;
 import github.exia.filewalker.AstFunction;
 import github.exia.filewalker.FileFilter;
 import github.exia.filewalker.FileWalker;
+import github.exia.provided.JavaSourceFileFilter;
 import github.exia.sg.visitors.GenericSelector;
 
 import java.io.File;
@@ -23,16 +24,7 @@ public class UnusedImportDeletor {
         "/home/sorra/workspace/myproject"
     };
     
-    FileFilter filter = new FileFilter() {
-      @Override
-      public boolean pass(File file) {
-        final String path = file.getPath();
-        if(path.endsWith(".java") && Character.isUpperCase(file.getName().charAt(0))) {
-          return true;
-        }
-        else return false;
-      }
-    };
+    FileFilter filter = new JavaSourceFileFilter();
     
     AstFunction function = new AstFunction() {
       @Override

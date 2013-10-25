@@ -4,6 +4,7 @@ import github.exia.ast.util.AstUtils;
 import github.exia.filewalker.AstFunction;
 import github.exia.filewalker.FileFilter;
 import github.exia.filewalker.FileWalker;
+import github.exia.provided.JavaSourceFileFilter;
 
 import java.io.File;
 
@@ -29,16 +30,7 @@ public class LogIsDebugChecker {
         "/home/sorra/workspace/myprojects"
     };
     
-    FileFilter filter = new FileFilter() {
-      @Override
-      public boolean pass(File file) {
-        final String path = file.getPath();
-        if(path.endsWith(".java") && Character.isUpperCase(file.getName().charAt(0))) {
-          return true;
-        }
-        else return false;
-      }
-    };
+    FileFilter filter = new JavaSourceFileFilter();
     
     AstFunction function = new AstFunction() {
       @Override

@@ -37,7 +37,7 @@ public class LogCorrecter {
       @Override
       public boolean doAndModify(final CompilationUnit cu, File file) {
         final TypeDeclaration type = AstUtils.tryGetConcreteType(cu);
-        if (type == null) return false;
+        if (type == null) return READONLY;
 
         GenericSelector<MethodInvocation> logSel = new GenericSelector<MethodInvocation>() {
           @Override
@@ -57,16 +57,16 @@ public class LogCorrecter {
         };
         
         if (type.getMethods().length == 0) {
-          return false;
+          return READONLY;
         }
         for (MethodDeclaration method : type.getMethods()) {
           method.accept(logSel);
         }
         
         if (logSel.getHits().size() > 0) {
-          return true;
+          return MODIFIED;
         }
-        else {return false;}
+        else {return READONLY;}
       }
     };
     

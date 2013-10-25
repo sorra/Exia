@@ -9,7 +9,6 @@ import github.exia.provided.JavaSourceFileFilter;
 import java.io.File;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CatchClause;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Expression;
@@ -66,7 +65,7 @@ public class LogIsDebugChecker {
           }
         });
         
-        return false;
+        return READONLY;
       }
     };
     

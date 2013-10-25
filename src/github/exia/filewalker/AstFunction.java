@@ -12,4 +12,7 @@ public interface AstFunction {
    * @return whether cu is modified
    */
   boolean doAndModify(CompilationUnit cu, File file);
+  
+  boolean MODIFIED = true;
+  boolean READONLY = false;
 }

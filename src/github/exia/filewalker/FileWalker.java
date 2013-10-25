@@ -2,14 +2,17 @@ package github.exia.filewalker;
 
 import github.exia.util.CuBase;
 import github.exia.util.FileMaker;
+import github.exia.util.MyLogger;
 
 import java.io.File;
-import java.util.List;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 
 public class FileWalker {
+  
+  private final MyLogger logger = MyLogger.getLogger(getClass());
+  
   /**
    * root folders to start scan from
    */
@@ -32,16 +35,21 @@ public class FileWalker {
   public void walk() {
     long start = System.currentTimeMillis();
     for (String root : roots) {
-      goThrough(new File(root));
+      File rootDir = new File(root);
+      if (!rootDir.isDirectory()) {
+        throw new RuntimeException("Wrong with "+root);
+      }
+      goThrough(rootDir);
     }
     long end = System.currentTimeMillis();
     System.out.println("Time cost: " + (end-start)/1000 + "s");
   }
   
   private void goThrough(File file) {
-    if (!file.exists()) {
-      throw new RuntimeException("File not exist: " + file.getPath());
-    }
+//    if (!file.exists()) {
+//      logger.log("File not exist: " + file.getPath());
+//      return;
+//    }
     if (file.isDirectory()) {
       for (File child : file.listFiles()) {
         goThrough(child);

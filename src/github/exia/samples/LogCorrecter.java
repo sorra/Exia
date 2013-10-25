@@ -36,12 +36,8 @@ public class LogCorrecter {
     AstFunction function = new AstFunction() {
       @Override
       public boolean doAndModify(final CompilationUnit cu, File file) {
-        AbstractTypeDeclaration atd = AstUtils.getAbstractType(cu);
-        final TypeDeclaration type;
-        if (atd instanceof TypeDeclaration) {
-          type = (TypeDeclaration) atd;
-        }
-        else {return false;}   
+        final TypeDeclaration type = AstUtils.tryGetConcreteType(cu);
+        if (type == null) return false;
 
         GenericSelector<MethodInvocation> logSel = new GenericSelector<MethodInvocation>() {
           @Override

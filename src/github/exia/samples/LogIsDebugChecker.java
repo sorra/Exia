@@ -35,14 +35,8 @@ public class LogIsDebugChecker {
     AstFunction function = new AstFunction() {
       @Override
       public boolean doAndModify(final CompilationUnit cu, final File file) {
-        boolean modified = false;
-        
-        AbstractTypeDeclaration atd = AstUtils.getAbstractType(cu);
-        final TypeDeclaration type;
-        if (atd instanceof TypeDeclaration) {
-          type = (TypeDeclaration) atd;
-        }
-        else {return false;}
+        final TypeDeclaration type = AstUtils.tryGetConcreteType(cu);
+        if (type == null) return false;
         
         cu.accept(new ASTVisitor() {
           @Override
@@ -71,7 +65,8 @@ public class LogIsDebugChecker {
             return true;
           }
         });
-        return modified;
+        
+        return false;
       }
     };
     

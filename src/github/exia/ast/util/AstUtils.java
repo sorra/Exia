@@ -241,6 +241,12 @@ public class AstUtils {
 	  return (AbstractTypeDeclaration) cu.types().get(0);
 	}
 	
+	public static TypeDeclaration tryGetConcreteType(CompilationUnit cu) {
+	  Object type = cu.types().get(0);
+	  if (type instanceof TypeDeclaration) return (TypeDeclaration) type;
+	  else return null;
+	}
+	
 	public static boolean isTypeSerializable(TypeDeclaration type) {
       List<Type> interfaces = type.superInterfaceTypes();
       for (Type intf : interfaces) {

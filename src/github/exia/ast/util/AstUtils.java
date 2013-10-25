@@ -1,8 +1,10 @@
 package github.exia.ast.util;
 
+import github.exia.sg.visitors.GenericSelector;
 import github.exia.util.MyLogger;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +25,7 @@ import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.QualifiedType;
+import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
@@ -32,6 +35,7 @@ import org.eclipse.jdt.core.dom.TryStatement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WildcardType;
 import org.junit.Assert;
 
@@ -386,4 +390,68 @@ public class AstUtils {
           l.set(l.indexOf(old), neo);
       }
     }
+	
+  public static String findDeclType(SimpleName sn) {
+    DeclTypeSelector declTypeSelector = new DeclTypeSelector(sn.getIdentifier());
+    MethodDeclaration upperMethod = AstUtils.findUpperMethodScope(sn);
+    if (upperMethod != null) {
+      AstUtils.findUpperMethodScope(sn).accept(declTypeSelector);
+      if (declTypeSelector.getHits().size() > 0) {
+        return AstUtils.pureNameOfType(declTypeSelector.getHits().get(0));
+      }
+    }
+    
+    declTypeSelector = new DeclTypeSelector(sn.getIdentifier());
+    FieldDeclaration[] fields = AstUtils.findUpperTypeScope(sn).getFields();
+    if (fields.length == 0) return null;
+    for (FieldDeclaration field : fields) {
+      field.accept(declTypeSelector);
+    }
+
+    Assert.assertTrue(declTypeSelector.getHits().size() <= 1);
+    if (declTypeSelector.getHits().size() == 1) {
+      return AstUtils.pureNameOfType(declTypeSelector.getHits().get(0));
+    }
+    
+    return null;
+  }
+  
+  private static class DeclTypeSelector extends GenericSelector<Type> {
+    private String name;
+
+    DeclTypeSelector(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public boolean visit(SimpleName node) {
+      ASTNode p = node.getParent();
+      if (node.getIdentifier().equals(name)) {
+        if (p instanceof VariableDeclarationFragment) {
+          ASTNode pp = p.getParent();
+          if (pp instanceof VariableDeclarationStatement)
+            addHit(((VariableDeclarationStatement) pp).getType());
+          else if (pp instanceof FieldDeclaration)
+            addHit(((FieldDeclaration) pp).getType());
+        }
+        else if (p instanceof SingleVariableDeclaration) {
+          addHit(((SingleVariableDeclaration) p).getType());
+        }
+      }
+      return true;
+    }
+    
+    @Deprecated
+    private void checkFoundCount(DeclTypeSelector declTypeSelector) {
+      String firstHitStr = declTypeSelector.getHits().get(0).toString();
+      int diffCount = 0;
+      for (Iterator<Type> it = declTypeSelector.getHits().listIterator(1); it.hasNext();) {
+        if (!it.next().toString().equals(firstHitStr))
+          diffCount++;
+      }
+      if (diffCount > 0) {
+        logger.log("[WARN] decl types found in methodScope: " + declTypeSelector.getHits());
+      }
+    }
+  }
 }

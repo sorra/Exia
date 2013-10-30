@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib-jdt-4.2/jdt-core_3.8.3.jar"/>
 	<classpathentry kind="lib" path="lib-jdt-4.2/org.eclipse.core.contenttype_3.4.200.v20120523-2004.jar"/>
 	<classpathentry kind="lib" path="lib-jdt-4.2/org.eclipse.core.jobs_3.5.300.v20120912-155018.jar"/>
@@ -14,5 +13,7 @@
 	<classpathentry kind="lib" path="lib-jdt-4.2/org.eclipse.jdt.core.source_3.8.1.v20120531-0637.jar"/>
 	<classpathentry kind="lib" path="lib-jdt-4.2/org.eclipse.osgi_3.8.2.v20130124-134944.jar"/>
 	<classpathentry kind="lib" path="lib-jdt-4.2/org.eclipse.text_3.5.200.v20120523-1310.jar"/>
+	<classpathentry kind="lib" path="lib-jdt-4.2/junit.jar"/>
+	<classpathentry kind="lib" path="lib-jdt-4.2/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

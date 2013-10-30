@@ -12,8 +12,6 @@
             </manifest>
             <zipfileset src="jar-in-jar-loader.zip"/>
             <fileset dir="bin"/>
-            <zipfileset dir="/home/dhu/workspace/eclipse/plugins/org.junit_4.10.0.v4_10_0_v20120426-0900" includes="junit.jar"/>
-            <zipfileset dir="/home/dhu/workspace/eclipse/plugins" includes="org.hamcrest.core_1.1.0.v20090501071000.jar"/>
             <zipfileset dir="lib-jdt-4.2" includes="jdt-core_3.8.3.jar"/>
             <zipfileset dir="lib-jdt-4.2" includes="org.eclipse.core.contenttype_3.4.200.v20120523-2004.jar"/>
             <zipfileset dir="lib-jdt-4.2" includes="org.eclipse.core.jobs_3.5.300.v20120912-155018.jar"/>
@@ -25,6 +23,8 @@
             <zipfileset dir="lib-jdt-4.2" includes="org.eclipse.jdt.core.source_3.8.1.v20120531-0637.jar"/>
             <zipfileset dir="lib-jdt-4.2" includes="org.eclipse.osgi_3.8.2.v20130124-134944.jar"/>
             <zipfileset dir="lib-jdt-4.2" includes="org.eclipse.text_3.5.200.v20120523-1310.jar"/>
+            <zipfileset dir="lib-jdt-4.2" includes="junit.jar"/>
+            <zipfileset dir="lib-jdt-4.2" includes="org.hamcrest.core_1.1.0.v20090501071000.jar"/>
         </jar>
     </target>
 </project>

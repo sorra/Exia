@@ -7,9 +7,17 @@ public class MyLogger {
 		return new MyLogger(cl);
 	}
 	
+	public static MyLogger getLogger(String name) {
+	  return new MyLogger(name);
+	}
+	
 	private MyLogger(Class<?> cl) {
 		String qname = cl.getName();
 		name = qname.substring(qname.lastIndexOf('.')+1, qname.length());
+	}
+	
+	private MyLogger(String name) {
+	  this.name = name;
 	}
 	
 	public void log(Object msg) {

@@ -16,3 +16,4 @@ There are examples showing you:
 
 There are two extension points: FileFilter & AstFunction.
 Implement them and call FileWalker to run your own operations.
+(github.exia.provided.JavaSourceFileFilter is ready to use, filtering *.java files)

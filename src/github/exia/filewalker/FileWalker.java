@@ -5,6 +5,10 @@ import github.exia.util.FileMaker;
 import github.exia.util.MyLogger;
 
 import java.io.File;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
@@ -21,6 +25,8 @@ public class FileWalker {
   private final FileFilter filter;
   
   private final AstFunction function;
+  
+  private final ConcurrentLinkedQueue<File> files = new ConcurrentLinkedQueue<File>(); 
   
   public static void launch(String[] roots, FileFilter filter, AstFunction function) {
     new FileWalker(roots, filter, function).walk();
@@ -41,6 +47,8 @@ public class FileWalker {
       }
       goThrough(rootDir);
     }
+    processAllFiles();
+    
     long end = System.currentTimeMillis();
     System.out.println("Time cost: " + (end-start)/1000 + "s");
   }
@@ -56,7 +64,35 @@ public class FileWalker {
       }
     }
     else if (filter.pass(file)) {
-      processFile(file);
+      files.offer(file);
+    }
+  }
+  
+  private void processAllFiles() {
+    int usableCores = Runtime.getRuntime().availableProcessors();
+//    usableCores = usableCores > 1 ? usableCores-1 : usableCores;
+    ExecutorService es = Executors.newFixedThreadPool(usableCores);
+    for (int i=0; i<usableCores; i++) {
+      es.execute(new Runnable() {
+        @Override
+        public void run() {
+          File file= files.poll();
+          if (file == null) {
+            return;
+          }
+          else {
+            processFile(file);
+            run();
+          }
+        }
+      });
+    }
+
+    es.shutdown();
+    try {
+      es.awaitTermination(10, TimeUnit.MINUTES);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
     }
   }
 

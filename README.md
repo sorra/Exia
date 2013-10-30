@@ -5,6 +5,10 @@ A simple, light framework for mass code analysis and manipulation
 
 ----
 
+How to build: ant or eclipse build
+
+----
+
 To learn how to use it, please see src/github/exia/samples/.
 
 There are examples showing you:

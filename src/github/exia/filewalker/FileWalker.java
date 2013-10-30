@@ -70,19 +70,17 @@ public class FileWalker {
   
   private void processAllFiles() {
     int usableCores = Runtime.getRuntime().availableProcessors();
-//    usableCores = usableCores > 1 ? usableCores-1 : usableCores;
+    usableCores = usableCores > 2 ? usableCores-1 : usableCores;
     ExecutorService es = Executors.newFixedThreadPool(usableCores);
     for (int i=0; i<usableCores; i++) {
       es.execute(new Runnable() {
         @Override
         public void run() {
-          File file= files.poll();
-          if (file == null) {
-            return;
-          }
-          else {
+          while (true) {
+            File file = files.poll();
+            if (file == null)
+              break;
             processFile(file);
-            run();
           }
         }
       });

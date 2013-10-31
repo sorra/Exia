@@ -9,7 +9,6 @@ import github.exia.sg.visitors.GenericSelector;
 
 import java.io.File;
 
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CatchClause;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Expression;
@@ -27,9 +26,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  */
 public class LogCorrecter {
   public static void main(String[] args) {
-    String[] roots = {
-        "/home/sorra/workspace/myproject"
-    };
+	String[] roots = args;
 
     FileFilter filter = new JavaSourceFileFilter();
     

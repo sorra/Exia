@@ -25,10 +25,8 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  */
 public class LogIsDebugChecker {
   public static void main(String[] args) {
-    String[] roots = {
-        "/home/sorra/workspace/myprojects"
-    };
-    
+	String[] roots = args;
+	  
     FileFilter filter = new JavaSourceFileFilter();
     
     AstFunction function = new AstFunction() {

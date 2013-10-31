@@ -5,7 +5,7 @@ A simple, light framework for mass code analysis and manipulation
 
 ----
 
-How to build: ant or eclipse build
+How to build: ant or eclipse build  
 How to run: eclipse run or cmd: java -jar exia-mt.jar [case-name] [paths...]
 >e.g. java -jar exia-mt.jar unused-import-delete /home/sorra/projects/a /home/sorra/projects/b
 
@@ -21,5 +21,5 @@ There are examples showing you:
 ----
 
 There are two extension points: FileFilter & AstFunction.
-Implement them and call FileWalker to run your own operations.
+Implement them and call FileWalker to run your own operations.  
 (github.exia.provided.JavaSourceFileFilter is ready to use, filtering *.java files)

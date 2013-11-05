@@ -2,6 +2,9 @@ package github.exia.filewalker;
 
 import java.io.File;
 
+/**
+ * Stateless
+ */
 public interface FileFilter {
   /**
    * checks whether the file can pass or not

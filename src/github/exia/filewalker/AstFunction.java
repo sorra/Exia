@@ -4,6 +4,9 @@ import java.io.File;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+/**
+ * Stateless
+ */
 public interface AstFunction {
   /**
    * operate on cu

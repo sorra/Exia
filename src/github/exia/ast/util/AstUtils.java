@@ -44,6 +44,27 @@ public class AstUtils {
 	private static MyLogger logger = MyLogger.getLogger(AstUtils.class);
 
 	/**
+	 * An excellent method! Feel free to use it!
+	 * @param old the old node
+	 * @param neo the new node
+	 */
+	public static void replaceNode(ASTNode old, ASTNode neo) {
+    StructuralPropertyDescriptor p = old.getLocationInParent();
+    if (p == null) {
+        // node is unparented
+        return;
+    }
+    if (p.isChildProperty()) {
+        old.getParent().setStructuralProperty(p, neo);
+        return;
+    }
+    if (p.isChildListProperty()) {
+        List l = (List) old.getParent().getStructuralProperty(p);
+        l.set(l.indexOf(old), neo);
+    }
+  }
+
+  /**
 	 * This algorithm had better get reviewed.
 	 * Returns null if not found until it meets Block
 	 */
@@ -375,22 +396,11 @@ public class AstUtils {
 		return null;
 	}
 
-	public static void replaceNode(ASTNode old, ASTNode neo) {
-      StructuralPropertyDescriptor p = old.getLocationInParent();
-      if (p == null) {
-          // node is unparented
-          return;
-      }
-      if (p.isChildProperty()) {
-          old.getParent().setStructuralProperty(p, neo);
-          return;
-      }
-      if (p.isChildListProperty()) {
-          List l = (List) old.getParent().getStructuralProperty(p);
-          l.set(l.indexOf(old), neo);
-      }
-    }
-	
+	/**
+   * 
+   * @param sn the symbol to resolve
+   * @return pure type name, null if not found
+   */
   public static String findDeclType(SimpleName sn) {
     DeclTypeSelector declTypeSelector = new DeclTypeSelector(sn.getIdentifier());
     MethodDeclaration upperMethod = AstUtils.findUpperMethodScope(sn);

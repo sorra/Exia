@@ -1,5 +1,6 @@
 package github.exia.ast.util;
 
+import github.exia.filewalker.Assert;
 import github.exia.sg.visitors.GenericSelector;
 import github.exia.util.MyLogger;
 
@@ -37,7 +38,6 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WildcardType;
-import org.junit.Assert;
 
 @SuppressWarnings("unchecked")
 public class AstUtils {
@@ -348,8 +348,8 @@ public class AstUtils {
 	}
 	
 	public static boolean hasModifierKeyword(BodyDeclaration decl, ModifierKeyword keyword) {
-	    Assert.assertNotNull(decl);
-	    Assert.assertNotNull(keyword);
+	    Assert.notNull(decl);
+	    Assert.notNull(keyword);
 		for (Object each : decl.modifiers()) {
 			if (each instanceof Modifier) {
 				if ( ((Modifier) each).getKeyword().equals(keyword) ) {
@@ -417,8 +417,13 @@ public class AstUtils {
     for (FieldDeclaration field : fields) {
       field.accept(declTypeSelector);
     }
-
-    Assert.assertTrue(declTypeSelector.getHits().size() <= 1);
+    for (Iterator<Type> it = declTypeSelector.getHits().iterator(); it.hasNext(); ) {
+      Type hit = it.next();
+      if (hit.getParent() instanceof FieldDeclaration == false) {
+        it.remove();
+      }
+    }
+    Assert.beTrue(declTypeSelector.getHits().size() <= 1);
     if (declTypeSelector.getHits().size() == 1) {
       return AstUtils.pureNameOfType(declTypeSelector.getHits().get(0));
     }

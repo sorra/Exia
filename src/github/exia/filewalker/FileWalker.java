@@ -17,6 +17,9 @@ public class FileWalker {
   
   private final MyLogger logger = MyLogger.getLogger(getClass());
   
+  private static final ThreadLocal<File> currentFile = new ThreadLocal<File>();
+  public static File getCurrentFile() {return currentFile.get();}
+  
   /**
    * root folders to start scan from
    */
@@ -82,6 +85,7 @@ public class FileWalker {
               break;
             processFile(file);
           }
+          currentFile.remove();
         }
       });
     }
@@ -95,6 +99,7 @@ public class FileWalker {
   }
 
   private void processFile(File file) {
+    currentFile.set(file);
     CompilationUnit cu = CuBase.getClientCuByFilePath(file.getPath());
     boolean modified = false;
     try {

@@ -1,10 +1,13 @@
 package github.exia.ast.util;
 
 import github.exia.filewalker.Assert;
+import github.exia.filewalker.FileWalker;
 import github.exia.sg.visitors.GenericSelector;
+import github.exia.util.CuBase;
 import github.exia.util.MyLogger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -269,7 +272,10 @@ public class AstUtils {
 	public static TypeDeclaration tryGetConcreteType(CompilationUnit cu) {
 	  Object type = cu.types().get(0);
 	  if (type instanceof TypeDeclaration) return (TypeDeclaration) type;
-	  else return null;
+	  else {
+	    logger.log("Fail to get concrete type for: " + ((AbstractTypeDeclaration)type).getName());
+	    return null;
+	  }
 	}
 	
 	public static boolean isTypeSerializable(TypeDeclaration type) {
@@ -402,35 +408,86 @@ public class AstUtils {
    * @return pure type name, null if not found
    */
   public static String findDeclType(SimpleName sn) {
-    DeclTypeSelector declTypeSelector = new DeclTypeSelector(sn.getIdentifier());
-    MethodDeclaration upperMethod = AstUtils.findUpperMethodScope(sn);
-    if (upperMethod != null) {
-      AstUtils.findUpperMethodScope(sn).accept(declTypeSelector);
-      if (declTypeSelector.getHits().size() > 0) {
-        return AstUtils.pureNameOfType(declTypeSelector.getHits().get(0));
+    {
+      DeclTypeSelector declTypeSelector = new DeclTypeSelector(sn.getIdentifier());
+      MethodDeclaration upperMethod = AstUtils.findUpperMethodScope(sn);
+      if (upperMethod != null) {
+        AstUtils.findUpperMethodScope(sn).accept(declTypeSelector);
+        if (declTypeSelector.getHits().size() > 0) {
+          return AstUtils.pureNameOfType(declTypeSelector.getHits().get(0));
+        }
       }
     }
     
-    declTypeSelector = new DeclTypeSelector(sn.getIdentifier());
-    FieldDeclaration[] fields = AstUtils.findUpperTypeScope(sn).getFields();
-    if (fields.length == 0) return null;
-    for (FieldDeclaration field : fields) {
-      field.accept(declTypeSelector);
-    }
-    for (Iterator<Type> it = declTypeSelector.getHits().iterator(); it.hasNext(); ) {
-      Type hit = it.next();
-      if (hit.getParent() instanceof FieldDeclaration == false) {
-        it.remove();
-      }
-    }
-    Assert.beTrue(declTypeSelector.getHits().size() <= 1);
-    if (declTypeSelector.getHits().size() == 1) {
-      return AstUtils.pureNameOfType(declTypeSelector.getHits().get(0));
+    List<Type> hits = findDeclTypeInClass(sn, AstUtils.findUpperTypeScope(sn));
+    Assert.beTrue(hits.size() <= 1);
+    if (hits.size() == 1) {
+      return AstUtils.pureNameOfType(hits.get(0));
     }
     
     return null;
   }
   
+  private static List<Type> findDeclTypeInClass(SimpleName sn, String qname) {
+    if (qname == null) {
+      return Collections.EMPTY_LIST;
+    }
+    String queryName = qname.replace('.', '/') + ".java";
+    String pathHit = null;
+    for (String path : FileWalker.getAllFilePaths()) {
+      if (path.endsWith(queryName)) {
+        pathHit = path;
+        break;
+      }
+    }
+    if (pathHit == null) {// Not found this class
+      logger.log(qname+" not found");
+      return Collections.EMPTY_LIST;
+    }
+    try {
+    TypeDeclaration typeclass = AstUtils.getType(CuBase.getCuNoCache(pathHit, false));
+    return findDeclTypeInClass(sn, typeclass);
+    } catch (RuntimeException e) {
+      logger.log("pathHit: "+pathHit);
+      logger.log(CuBase.getCuNoCache(pathHit, false));
+      throw e;
+    }
+  }
+  
+  private static List<Type> findDeclTypeInClass(SimpleName sn, TypeDeclaration typeclass) {
+    FieldDeclaration[] fields = typeclass.getFields();
+    String superQname = null;
+    if (typeclass.getSuperclassType() != null) {
+      final String superclassName = typeclass.getSuperclassType().toString().trim();
+      if (superclassName.contains(".")) {
+        superQname = superclassName;
+      }
+      final CompilationUnit cu = AstUtils.findUpperCu(typeclass);
+      ImportDeclaration imp = AstUtils.findImportByLastName(superclassName, cu.imports());
+      if(imp != null) superQname = imp.getName().getFullyQualifiedName();
+      else superQname = cu.getPackage().getName().getFullyQualifiedName()+'.'+superclassName;
+    }
+    if (fields.length == 0) {
+      return findDeclTypeInClass(sn, superQname);
+    }
+    else {
+      DeclTypeSelector declTypeSelector = new DeclTypeSelector(sn.getIdentifier());
+      for (FieldDeclaration field : fields) {
+        field.accept(declTypeSelector);
+      }
+      for (Iterator<Type> it = declTypeSelector.getHits().iterator(); it.hasNext(); ) {
+        Type hit = it.next();
+        if (hit.getParent() instanceof FieldDeclaration == false) {
+          it.remove();
+        }
+      }
+      if (declTypeSelector.getHits().isEmpty()) {
+        return findDeclTypeInClass(sn, superQname);
+      }
+      else return declTypeSelector.getHits();
+    }
+  }
+
   private static class DeclTypeSelector extends GenericSelector<Type> {
     private String name;
 

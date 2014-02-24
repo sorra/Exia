@@ -5,9 +5,11 @@ A simple, light framework for mass code analysis and manipulation
 
 ----
 
-How to build: ant or eclipse build  
+How to build: ant or eclipse build
+>ant
+
 How to run: java -jar exia-mt.jar [case-name] [paths...]
->e.g. java -jar exia-mt.jar unused-import-delete /home/sorra/projects/a /home/sorra/projects/b
+>example: java -jar exia-mt.jar unused-import-delete /home/sorra/projects/a /home/sorra/projects/b
 
 ----
 

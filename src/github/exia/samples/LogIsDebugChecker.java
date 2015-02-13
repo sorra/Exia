@@ -1,6 +1,7 @@
 package github.exia.samples;
 
 import github.exia.ast.util.AstUtils;
+import github.exia.ast.util.FindUpper;
 import github.exia.filewalker.AstFunction;
 import github.exia.filewalker.FileFilter;
 import github.exia.filewalker.FileWalker;
@@ -42,7 +43,7 @@ public class LogIsDebugChecker {
                 && mi.getExpression() instanceof SimpleName
                 && mi.getExpression().toString().contains("log")) {
               if (isOnCaught(mi, type)) {
-                Statement st = AstUtils.findUpperStatement(mi);
+                Statement st = FindUpper.statement(mi);
                 IfStatement ifs = null;
                 if (st.getParent() instanceof IfStatement) {
                   ifs = (IfStatement) st.getParent();
@@ -75,7 +76,7 @@ public class LogIsDebugChecker {
     Expression arg = (Expression) mi.arguments().get(0);
     if (arg instanceof SimpleName) {
       String ename = ((SimpleName) arg).getIdentifier();
-      CatchClause cc = AstUtils.findUpperCatch(mi);
+      CatchClause cc = FindUpper.catchClause(mi);
       if (cc != null && cc.getException().getName().getIdentifier().equals(ename)) {
         FieldDeclaration loggerField = AstUtils.findFieldByName(loggerName.getIdentifier(), type);
         if (loggerField != null && loggerField.getType().toString().equals("Logger")) {

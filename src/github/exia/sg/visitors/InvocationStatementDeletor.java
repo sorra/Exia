@@ -1,7 +1,7 @@
 package github.exia.sg.visitors;
 
 
-import github.exia.ast.util.AstUtils;
+import github.exia.ast.util.FindUpper;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.MethodInvocation;
@@ -25,7 +25,7 @@ public class InvocationStatementDeletor extends ASTVisitor {
 	@Override
 	public boolean visit(MethodInvocation node) {
 		if (node.getName().getIdentifier().equals(methodName)) {
-			Statement upper = AstUtils.findUpperStatement(node);
+			Statement upper = FindUpper.statement(node);
 			if (upper != null) {
 				upper.delete();
 			} else {

@@ -12,35 +12,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.jdt.core.dom.Annotation;
-import org.eclipse.jdt.core.dom.ArrayType;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
-import org.eclipse.jdt.core.dom.CatchClause;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-import org.eclipse.jdt.core.dom.ParameterizedType;
-import org.eclipse.jdt.core.dom.PrimitiveType;
-import org.eclipse.jdt.core.dom.QualifiedType;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SimpleType;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
-import org.eclipse.jdt.core.dom.ThisExpression;
-import org.eclipse.jdt.core.dom.TryStatement;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.eclipse.jdt.core.dom.WildcardType;
 
 @SuppressWarnings("unchecked")
 public class AstUtils {
@@ -67,126 +40,7 @@ public class AstUtils {
     }
   }
 
-  /**
-	 * This algorithm had better get reviewed.
-	 * Returns null if not found until it meets Block
-	 */
-	public static Statement findUpperStatement(ASTNode node) {
-		ASTNode parent = node.getParent();
-
-		if (parent == null) {
-			return null;
-		}
-
-		if (parent instanceof Statement) {
-			return (Statement) parent;
-		}
-		else if (parent instanceof Block) {
-			return null;
-		}
-
-		return findUpperStatement(parent);
-	}
-
-	/**
-	 * Returns null if not found until it meets TypeDeclaration
-	 */
-	public static MethodDeclaration findUpperMethodScope(ASTNode node) {
-		ASTNode parent = node.getParent();
-
-		if (parent == null) {
-			return null;
-		}
-
-		if (parent instanceof MethodDeclaration) {
-			return (MethodDeclaration) parent;
-		}
-		else if (parent instanceof AbstractTypeDeclaration) {
-			return null;
-		} 
-
-		return findUpperMethodScope(parent);
-	}
-	
-	/**
-	 * Returns null if not found until it meets MethodDeclaration
-	 */
-	public static TryStatement findUpperTryScope(ASTNode node) {
-		ASTNode parent = node.getParent();
-
-		if (parent == null) {
-			return null;
-		}
-		if (parent instanceof TryStatement) {
-			return (TryStatement) parent;
-		}
-		else if (parent instanceof MethodDeclaration) {
-			return null;
-		}
-		
-		return findUpperTryScope(parent);
-	}
-	
-	public static CatchClause findUpperCatch(ASTNode node) {
-      ASTNode parent = node.getParent();
-
-      if (parent == null) {
-          return null;
-      }
-      if (parent instanceof CatchClause) {
-          return (CatchClause) parent;
-      }
-      if (parent instanceof TryStatement) {
-          return null;
-      }
-      if (parent instanceof MethodDeclaration) {
-        return null;
-      }
-
-      return findUpperCatch(parent);
-	}
-
-	/**
-	 * Returns null if not found until it meets CompilationUnit
-	 */
-	public static TypeDeclaration findUpperTypeScope(ASTNode node) {
-		ASTNode parent = node.getParent();
-
-		if (parent == null) {
-			return null;
-		}
-
-		if (parent instanceof TypeDeclaration) {
-			return (TypeDeclaration) parent;
-		}
-		else if (parent instanceof AbstractTypeDeclaration) {
-		    throw new UnsupportedOperationException();
-		}
-		else if (parent instanceof CompilationUnit) {
-			return null;
-		}
-
-		return findUpperTypeScope(parent);
-	}
-	
-	/**
-	 * Returns null if not found
-	 */
-	public static CompilationUnit findUpperCu(ASTNode node) {
-		ASTNode parent = node.getParent();
-		
-		if (parent == null) {
-			return null;
-		}
-		
-		if (parent instanceof CompilationUnit) {
-			return (CompilationUnit) parent;
-		}
-
-		return findUpperCu(parent);
-	}
-	
-    public static FieldDeclaration findFieldByName(String name, TypeDeclaration type) {
+  public static FieldDeclaration findFieldByName(String name, TypeDeclaration type) {
       for (FieldDeclaration field : type.getFields()) {
         for (Object frag : field.fragments()) {
           if (((VariableDeclarationFragment) frag)
@@ -410,16 +264,16 @@ public class AstUtils {
   public static String findDeclType(SimpleName sn) {
     {
       DeclTypeSelector declTypeSelector = new DeclTypeSelector(sn.getIdentifier());
-      MethodDeclaration upperMethod = AstUtils.findUpperMethodScope(sn);
+      MethodDeclaration upperMethod = FindUpper.methodScope(sn);
       if (upperMethod != null) {
-        AstUtils.findUpperMethodScope(sn).accept(declTypeSelector);
+        FindUpper.methodScope(sn).accept(declTypeSelector);
         if (declTypeSelector.getHits().size() > 0) {
           return AstUtils.pureNameOfType(declTypeSelector.getHits().get(0));
         }
       }
     }
     
-    List<Type> hits = findDeclTypeInClass(sn, AstUtils.findUpperTypeScope(sn));
+    List<Type> hits = findDeclTypeInClass(sn, FindUpper.typeScope(sn));
     Assert.beTrue(hits.size() <= 1);
     if (hits.size() == 1) {
       return AstUtils.pureNameOfType(hits.get(0));
@@ -462,7 +316,7 @@ public class AstUtils {
       if (superclassName.contains(".")) {
         superQname = superclassName;
       }
-      final CompilationUnit cu = AstUtils.findUpperCu(typeclass);
+      final CompilationUnit cu = FindUpper.cu(typeclass);
       ImportDeclaration imp = AstUtils.findImportByLastName(superclassName, cu.imports());
       if(imp != null) superQname = imp.getName().getFullyQualifiedName();
       else superQname = cu.getPackage().getName().getFullyQualifiedName()+'.'+superclassName;
@@ -511,19 +365,6 @@ public class AstUtils {
         }
       }
       return true;
-    }
-    
-    @Deprecated
-    private void checkFoundCount(DeclTypeSelector declTypeSelector) {
-      String firstHitStr = declTypeSelector.getHits().get(0).toString();
-      int diffCount = 0;
-      for (Iterator<Type> it = declTypeSelector.getHits().listIterator(1); it.hasNext();) {
-        if (!it.next().toString().equals(firstHitStr))
-          diffCount++;
-      }
-      if (diffCount > 0) {
-        logger.log("[WARN] decl types found in methodScope: " + declTypeSelector.getHits());
-      }
     }
   }
 }

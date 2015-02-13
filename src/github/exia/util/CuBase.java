@@ -123,6 +123,28 @@ public class CuBase {
 		cuCache.put(srcFile, cu);
 		return cu;
 	}
+	
+  public static CompilationUnit getCuNoCache(String srcFile, boolean recordable) {
+    String source;
+    try {
+      source = FileBufferedReader.readToString(srcFile);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    return getCuBySourceNoCache(source, recordable);
+  }
+
+  private static CompilationUnit getCuBySourceNoCache(String source, boolean recordable) {
+    CompilationUnit cu = parse(source.toCharArray());
+
+    if (recordable)
+      cu.recordModifications();
+    else
+      cu.accept(new ExtraArrayDimensionRewriter());
+
+    return cu;
+  }
 
 	public static CompilationUnit parse(char[] src) {
 			ASTParser parser = ASTParser.newParser(AST.JLS4);

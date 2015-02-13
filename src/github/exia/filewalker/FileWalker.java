@@ -17,6 +17,8 @@ public class FileWalker {
   
   private final MyLogger logger = MyLogger.getLogger(getClass());
   
+  public static String[] projects;
+  
   private static final ThreadLocal<File> currentFile = new ThreadLocal<File>();
   public static File getCurrentFile() {return currentFile.get();}
   
@@ -39,6 +41,7 @@ public class FileWalker {
     this.roots = roots;
     this.filter = filter;
     this.function = function;
+    projects = roots;
   }
 
   public void walk() {

@@ -42,8 +42,6 @@ public class FileBufferedReader {
 //			System.out.println("Reading complete. " + filename + ": " + lines.size() + " lines");
 
 			return lines;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
 		} finally {
 			if (reader != null) reader.close();
 		}

@@ -1,7 +1,7 @@
 package github.exia.ast.util;
 
 import github.exia.filewalker.Assert;
-import github.exia.filewalker.FileWalker;
+import github.exia.filewalker.SourcePathCollector;
 import github.exia.sg.visitors.GenericSelector;
 import github.exia.util.CuBase;
 import github.exia.util.MyLogger;
@@ -434,7 +434,7 @@ public class AstUtils {
     }
     String queryName = qname.replace('.', '/') + ".java";
     String pathHit = null;
-    for (String path : FileWalker.getAllFilePaths()) {
+    for (String path : SourcePathCollector.sourcePaths().values()) {
       if (path.endsWith(queryName)) {
         pathHit = path;
         break;

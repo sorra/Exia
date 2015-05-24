@@ -9,7 +9,7 @@ How to build: ant or eclipse build
 >ant
 
 How to run: java -jar exia-mt.jar [case-name] [paths...]
->example: java -jar exia-mt.jar unused-import-delete /home/sorra/projects/a /home/sorra/projects/b
+>example: java -jar exia-mt.jar unused-import-delete /home/sorra/projects/
 
 ----
 
@@ -25,3 +25,5 @@ There are examples showing you:
 There are two extension points: FileFilter & AstFunction.
 Implement them and call FileWalker to run your own operations.  
 (github.exia.provided.JavaSourceFileFilter is ready to use, filtering *.java files)
+
+github.exia.ast.util provides convenient utilities.

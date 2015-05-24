@@ -167,37 +167,6 @@ public class AstUtils {
 		}
 		return methodSigs;
 	}
-
-	public static List<MethodDeclaration> listMethods(CompilationUnit cu,
-			ModifierKeyword modifierKeyword) {
-		TypeDeclaration ejbClass = (TypeDeclaration) cu.types().get(0);
-
-		List<MethodDeclaration> ejbMethods = new LinkedList<MethodDeclaration>();
-		if (modifierKeyword == null) {
-			for (MethodDeclaration method : ejbClass.getMethods()) {
-				ejbMethods.add(method);
-			}
-		} else {
-			for (MethodDeclaration method : ejbClass.getMethods()) {
-				for (Object o : method.modifiers()) {
-					if (o instanceof Modifier && ((Modifier) o).getKeyword() == modifierKeyword) {
-						ejbMethods.add(method);
-					}
-				}
-			}
-		}
-		return ejbMethods;
-	}
-	
-	static boolean isExternal(MethodDeclaration method, CompilationUnit remoteCu) {
-		if(!hasModifierKeyword(method, ModifierKeyword.PUBLIC_KEYWORD)) {
-			return false;
-		}
-		if (findRelevantMethodSig(toMethodSig(method), remoteCu) != null) {
-			return true;
-		}
-		return false;
-	}
 	
 	public static boolean isSelfCallGrammar(MethodInvocation mi) {
 		return mi.getExpression() == null || mi.getExpression() instanceof ThisExpression;
@@ -219,6 +188,25 @@ public class AstUtils {
 		}
 		return false;
 	}
+
+  public static List<TypeDeclaration> superClasses(TypeDeclaration td) {
+    List<TypeDeclaration> supers = new ArrayList<>();
+    String name = null;
+    while (true) {
+      if (td.getSuperclassType() != null) {
+        name = td.getSuperclassType().toString().trim();
+      }
+      if (!name.contains(".")) {
+        name = findImportByLastName(name, ((CompilationUnit) td.getParent()).imports()).getName().getFullyQualifiedName();
+      }
+      if (name == null) {
+        break;
+      } else {
+        supers.add( getType(CuBase.getClientCuByFilePath(SourcePathCollector.get(name))) );
+      }
+    }
+    return supers;
+  }
 	
 	public static boolean isFieldInjectable(FieldDeclaration fd) {
 	  for (Object modifier : fd.modifiers()) {

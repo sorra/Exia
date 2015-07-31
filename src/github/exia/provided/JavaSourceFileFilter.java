@@ -1,12 +1,11 @@
 package github.exia.provided;
 
 import java.io.File;
-
-import github.exia.filewalker.FileFilter;
+import java.io.FileFilter;
 
 public class JavaSourceFileFilter implements FileFilter {
   @Override
-  public boolean pass(File file) {
-    return file.getPath().endsWith(".java") && Character.isUpperCase(file.getName().charAt(0));
+  public boolean accept(File file) {
+    return file.getPath().endsWith(".java") && !file.getName().equals("package-info.java");
   }
 }

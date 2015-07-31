@@ -3,11 +3,11 @@ package github.exia.samples;
 import github.exia.ast.util.AstUtils;
 import github.exia.ast.util.FindUpper;
 import github.exia.filewalker.AstFunction;
-import github.exia.filewalker.FileFilter;
 import github.exia.filewalker.FileWalker;
 import github.exia.provided.JavaSourceFileFilter;
 
 import java.io.File;
+import java.io.FileFilter;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CatchClause;

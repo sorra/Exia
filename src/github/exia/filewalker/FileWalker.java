@@ -5,6 +5,7 @@ import github.exia.util.FileMaker;
 import github.exia.util.MyLogger;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -69,7 +70,7 @@ public class FileWalker {
         goThrough(child);
       }
     }
-    else if (filter.pass(file)) {
+    else if (filter.accept(file)) {
       files.offer(file);
     }
   }

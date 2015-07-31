@@ -1,12 +1,12 @@
 package github.exia.samples;
 
 import github.exia.filewalker.AstFunction;
-import github.exia.filewalker.FileFilter;
 import github.exia.filewalker.FileWalker;
 import github.exia.provided.JavaSourceFileFilter;
 import github.exia.sg.visitors.GenericSelector;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 

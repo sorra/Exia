@@ -11,10 +11,6 @@ import org.eclipse.jdt.core.dom.Type;
  * NOTE: only have effects on method signatures
  */
 public class ExtraArrayDimensionRewriter extends ASTVisitor {
-//	@Override
-//	public boolean visit(VariableDeclarationFragment node) {
-//		return true;
-//	}
 	
 	@Override
 	public boolean visit(SingleVariableDeclaration node) {

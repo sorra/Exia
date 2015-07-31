@@ -44,16 +44,16 @@ public class CuBase {
 	
 	private static final Map<String, String> compilerOptions = JavaCore.getOptions();
 	static {
-		compilerOptions.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
-		compilerOptions.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
-		compilerOptions.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+		compilerOptions.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
+		compilerOptions.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
+		compilerOptions.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
 	}
 	
 	private static final Map<String, String> formatterOptions = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
 	static {
-		formatterOptions.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
-		formatterOptions.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
-		formatterOptions.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+		formatterOptions.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
+		formatterOptions.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
+		formatterOptions.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
 		formatterOptions.put(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, JavaCore.SPACE);
 		formatterOptions.put(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, "2");
 		formatterOptions.put(DefaultCodeFormatterConstants.FORMATTER_LINE_SPLIT, "100");

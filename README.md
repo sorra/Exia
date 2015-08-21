@@ -1,15 +1,17 @@
 Exia
 ====
 
-A simple, light framework for mass code analysis and manipulation
+A simple, light framework for mass code analysis and manipulation, proved in 2 million lines of Java 7 code.
 
 ----
 
 How to build: ant or eclipse build
->ant
+command: 
+  >ant
 
 How to run: java -jar exia-mt.jar [case-name] [paths...]
->example: java -jar exia-mt.jar unused-import-delete /home/sorra/projects/
+example: 
+  >java -jar exia-mt.jar unused-import-delete /home/sorra/projects/
 
 ----
 

@@ -1,7 +1,4 @@
-*.class
-*~
-
-# Package Files #
-*.war
-*.ear
-/bin/
+build/
+.gradle/
+.idea/
+.DS_Store

@@ -2,6 +2,7 @@ package com.iostate.exia.samples;
 
 import java.io.File;
 
+import com.iostate.exia.ast.AstFind;
 import com.iostate.exia.ast.FindUpper;
 import com.iostate.exia.ast.visitors.GenericSelector;
 import com.iostate.exia.ast.AstUtils;
@@ -69,7 +70,7 @@ public class LogCorrecter implements AstFunction {
       String ename = ((SimpleName) arg).getIdentifier();
       CatchClause cc = FindUpper.catchClause(mi);
       if (cc != null && cc.getException().getName().getIdentifier().equals(ename)) {
-        FieldDeclaration loggerField = AstUtils.findFieldByName(loggerName.getIdentifier(), type);
+        FieldDeclaration loggerField = AstFind.findFieldByName(loggerName.getIdentifier(), type);
         if (loggerField != null && loggerField.getType().toString().equals("Logger")) {
           return true;
         }

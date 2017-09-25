@@ -7,7 +7,9 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 
-
+/**
+ * Example
+ */
 public class ClassInstanceCreationReplacer extends ASTVisitor {
 
   private StringMatcher strMatcher;
@@ -21,7 +23,7 @@ public class ClassInstanceCreationReplacer extends ASTVisitor {
   @Override
   public boolean visit(ClassInstanceCreation node) {
     if (strMatcher.matches(
-        AstUtils.pureNameOfType(node.getType()))) {
+        node.getType().toString().trim())) {
       AST ast = node.getAST();
       node.setType(ast.newSimpleType(ast.newSimpleName(neo)));
     }

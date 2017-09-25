@@ -135,16 +135,10 @@ public class VariableTypeResolver {
             Modifier.ModifierKeyword.PRIVATE_KEYWORD)) {//TODO handle package-private
           continue;
         }
-        applyScope((ASTNode) bd);
+        ((FieldDeclaration) bd).accept(visitor);
+        if (found()) {return;}
       }
     }
-  }
-
-  private void applyScope(ASTNode scope) {
-    if (scope == null) {
-      throw new NullPointerException();
-    }
-    scope.accept(visitor);
   }
 
   private List<TypeDeclaration> superClasses(AbstractTypeDeclaration atd) {

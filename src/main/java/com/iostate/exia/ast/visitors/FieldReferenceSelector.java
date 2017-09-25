@@ -7,11 +7,13 @@ import java.util.Set;
 import com.iostate.exia.ast.AstUtils;
 import org.eclipse.jdt.core.dom.*;
 
-
+/**
+ * Example
+ */
 public class FieldReferenceSelector extends ASTVisitor {
   private static final boolean GO = true;
 
-  private Set<String> hits = new HashSet<String>();
+  private Set<String> hits = new HashSet<>();
 
   public Set<String> getHits() {
     return hits;
@@ -21,7 +23,7 @@ public class FieldReferenceSelector extends ASTVisitor {
   public boolean visit(SimpleName node) {
     ASTNode parent = node.getParent();
     if (parent instanceof Type
-        && AstUtils.pureNameOfType((Type) parent).equals(node.getIdentifier())) {
+        && parent.toString().trim().equals(node.getIdentifier())) {
       return GO;
     }
     if (parent instanceof MethodInvocation && ((MethodInvocation) parent).getName() == node) {

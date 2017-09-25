@@ -24,7 +24,7 @@ public class AstHelper {
   }
 
   /**
-   * @care primitive types will become boxed types
+   * NOTE: primitive types will become boxed types
    */
   public Type copyReturnType(Type ejbReturnType) {
     Type rt;

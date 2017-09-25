@@ -3,7 +3,7 @@ Exia
 
 Proved on 2 million lines of code: a tooling framework for automatic analysis and modification on large codebases.
 
-Works on Java 6/7 codebases.
+Supports Java 6/7/8 (Modification on Java 8 code is not guaranteed).
 
 ### Usage
 

@@ -89,20 +89,43 @@ public class AstFind {
 
   public static List<TypeDeclaration> superClasses(TypeDeclaration td) {
     List<TypeDeclaration> supers = new ArrayList<>();
-    String name = null;
     while (true) {
-      if (td.getSuperclassType() != null) {
-        name = td.getSuperclassType().toString().trim();
-      }
-      if (name == null) {
+      if (td.getSuperclassType() == null) {
         break;
       }
-      if (!name.contains(".")) {
-        ImportDeclaration imp = findImportByLastName(name, ((CompilationUnit) td.getParent()).imports());
-        assert imp != null;
-        name = imp.getName().getFullyQualifiedName();
+      CompilationUnit cu = (CompilationUnit) td.getParent();
+      String sname = td.getSuperclassType().toString().trim();
+
+      String foundQname = null;
+      if (sname.contains(".")) {
+        foundQname = sname;
+      } else {
+        ImportDeclaration imp = findImportByLastName(sname, cu.imports());
+        if (imp != null) {
+          foundQname = imp.getName().getFullyQualifiedName();
+        }
       }
-      supers.add((TypeDeclaration) CuBase.getCuByQname(name).types().get(0));
+
+      // Search in xxx.* imports
+      for (ImportDeclaration imp : ((List<ImportDeclaration>) cu.imports())) {
+        if (imp.isOnDemand()) {
+          String qname = imp.getName().toString().trim() + "." + sname;
+          if (SourcePaths.containsQname(qname)) {
+            foundQname = qname;
+          }
+        }
+      }
+
+      // Search in current package
+      if (foundQname == null) {
+        foundQname = cu.getPackage().getName().toString().trim() + "." + sname;
+        if (!SourcePaths.containsQname(foundQname)) {
+          break;
+        }
+      }
+
+      td = AstUtils.getType(CuBase.getCuByQname(foundQname));
+      supers.add(td);
     }
     return supers;
   }
@@ -122,6 +145,18 @@ public class AstFind {
     for (ImportDeclaration imp : imports) {
       if (imp.getName().getFullyQualifiedName().equals(name)) {
         return imp;
+      }
+    }
+    return null;
+  }
+
+  public static FieldDeclaration findFieldByName(String name, TypeDeclaration type) {
+    for (FieldDeclaration field : type.getFields()) {
+      for (Object frag : field.fragments()) {
+        if (((VariableDeclarationFragment) frag)
+            .getName().getIdentifier().equals(name)) {
+          return field;
+        }
       }
     }
     return null;
@@ -154,7 +189,7 @@ public class AstFind {
       if (upperMethod != null) {
         FindUpper.methodScope(sn).accept(declTypeSelector);
         if (declTypeSelector.getHits().size() > 0) {
-          return AstUtils.pureNameOfType(declTypeSelector.getHits().get(0));
+          return declTypeSelector.getHits().get(0).toString().trim();
         }
       }
     }
@@ -162,7 +197,7 @@ public class AstFind {
     List<Type> hits = findDeclTypeInClass(sn, FindUpper.typeScope(sn));
     Assert.assertTrue(hits.size() <= 1);
     if (hits.size() == 1) {
-      return AstUtils.pureNameOfType(hits.get(0));
+      return hits.get(0).toString().trim();
     }
 
     return null;
@@ -204,7 +239,7 @@ public class AstFind {
       }
       final CompilationUnit cu = FindUpper.cu(typeclass);
       assert cu != null;
-      ImportDeclaration imp = AstUtils.findImportByLastName(superclassName, cu.imports());
+      ImportDeclaration imp = findImportByLastName(superclassName, cu.imports());
       if (imp != null) superQname = imp.getName().getFullyQualifiedName();
       else superQname = cu.getPackage().getName().getFullyQualifiedName() + '.' + superclassName;
     }

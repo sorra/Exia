@@ -1,7 +1,9 @@
 Exia
 ====
 
-Proved on 2 million lines of code: a tooling framework for automatic analysis and modification on large codebases.
+A tooling framework for analyzing and modifying large codebases **automatically**.
+
+Proved on 2 million lines of code.
 
 Supports Java 6/7/8 (Modification on Java 8 code is not fully tested).
 
@@ -37,6 +39,7 @@ The package `com.iostate.exia.ast` provides convenient AST utilities.
 - Implemented in Java 8.
 - Upgraded JDT library to 3.12.3 in maven central.
 - Changed the build tool to Gradle.
+- Single-threaded (fast enough, why not make it easy to debug?)
 - Better API.
-- More useful samples.
+- More useful examples.
 - Will add intelligence.

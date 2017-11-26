@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.iostate.exia.util.OtherUtil;
 import com.iostate.exia.util.MyLogger;
 
 public class ModuleCommander {

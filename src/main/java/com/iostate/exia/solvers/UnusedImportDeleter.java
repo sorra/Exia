@@ -15,10 +15,10 @@ import org.eclipse.jdt.core.dom.SimpleName;
 /**
  * Detects and removes unused imports in java files
  */
-public class UnusedImportDeletor implements AstFunction {
+public class UnusedImportDeleter implements AstFunction {
 
   public static void main(String[] args) {
-    FileWalker.launch(args, new UnusedImportDeletor());
+    FileWalker.launch(args, new UnusedImportDeleter());
   }
 
   @Override

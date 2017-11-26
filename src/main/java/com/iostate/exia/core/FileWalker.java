@@ -3,10 +3,6 @@ package com.iostate.exia.core;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import com.iostate.exia.api.JavaSourceFileFilter;
 import com.iostate.exia.io.FileUtil;
 import com.iostate.exia.util.MyLogger;
@@ -21,7 +17,7 @@ public class FileWalker {
 
   private final MyLogger logger = MyLogger.getLogger(getClass());
 
-  public static String[] projects;
+  static String[] projects;
 
   /**
    * root folders to start scan from
@@ -35,6 +31,9 @@ public class FileWalker {
   private final ConcurrentLinkedQueue<File> files = new ConcurrentLinkedQueue<>();
 
   public static void launch(String[] roots, AstFunction function) {
+    if (roots.length == 0) {
+      throw new IllegalArgumentException("No directories specified!");
+    }
     launch(roots, new JavaSourceFileFilter(), function);
   }
 
@@ -79,29 +78,35 @@ public class FileWalker {
   }
 
   private void processAllFiles() {
-    int usableCores = Runtime.getRuntime().availableProcessors();
-    usableCores = usableCores > 2 ? usableCores - 1 : usableCores;
-    ExecutorService es = Executors.newFixedThreadPool(usableCores);
-    for (int i = 0; i < usableCores; i++) {
-      es.execute(new Runnable() {
-        @Override
-        public void run() {
-          while (true) {
-            File file = files.poll();
-            if (file == null)
-              break;
-            processFile(file);
-          }
-        }
-      });
+    while (true) {
+      File file = files.poll();
+      if (file == null)
+        break;
+      processFile(file);
     }
-
-    es.shutdown();
-    try {
-      es.awaitTermination(10, TimeUnit.MINUTES);
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
+//    int usableCores = Runtime.getRuntime().availableProcessors();
+//    usableCores = usableCores > 2 ? usableCores - 1 : usableCores;
+//    ExecutorService es = Executors.newFixedThreadPool(usableCores);
+//    for (int i = 0; i < usableCores; i++) {
+//      es.execute(new Runnable() {
+//        @Override
+//        public void run() {
+//          while (true) {
+//            File file = files.poll();
+//            if (file == null)
+//              break;
+//            processFile(file);
+//          }
+//        }
+//      });
+//    }
+//
+//    es.shutdown();
+//    try {
+//      es.awaitTermination(10, TimeUnit.MINUTES);
+//    } catch (InterruptedException e) {
+//      throw new RuntimeException(e);
+//    }
   }
 
   private void processFile(File file) {

@@ -6,8 +6,6 @@ import java.util.List;
 import com.iostate.exia.util.MyLogger;
 import org.eclipse.jdt.core.dom.*;
 
-import static com.iostate.exia.util.StringMatcher.endsWith;
-
 @SuppressWarnings("unchecked")
 public class AstUtils {
   private static MyLogger logger = MyLogger.getLogger(AstUtils.class);

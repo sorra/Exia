@@ -3,26 +3,26 @@ Exia
 
 Proved on 2 million lines of code: a tooling framework for automatic analysis and modification on large codebases.
 
-Supports Java 6/7/8 (Modification on Java 8 code is not guaranteed).
+Supports Java 6/7/8 (Modification on Java 8 code is not fully tested).
 
 ### Usage
 
-Install JDK 8 before using.
+Requirement: JDK 8
 
 Build: `gradle shadowJar`
 
-Run: `java -jar build/libs/exia-2.0-all.jar [class-name] [project-paths...]`
+Run: `java -jar build/libs/exia-2.0-all.jar [solver-name] [paths-being-scanned...]`
 
-For example: `java -jar build/libs/exia-2.0-all.jar UnusedImportDeletor /home/sorra/projects/`
+> For example: `java -jar build/libs/exia-2.0-all.jar UnusedImportDeletor /home/sorra/projects/`
 
 ----
 
-To learn how to write your own program, please see the package `com.iostate.exia.samples`.
-
-There are samples showing you:
-1. Detect the places you have forgotten to write `logger.isDebugEnabled()`
-2. Fix a type of misuse of `logger.error()` API
-3. Remove unused imports
+To learn how to write your own tool, see examples in the package `com.iostate.exia.solvers` about how to:
+1. Remove unused imports
+2. Detect the places you have forgotten to write `logger.isDebugEnabled()`
+3. Fix the places you have forgotten to write `logger.isDebugEnabled()`
+4. Fix the misuse of `logger.error(...)` API
+5. Fix the wrong logger name mismatching its enclosing class
 
 ----
 

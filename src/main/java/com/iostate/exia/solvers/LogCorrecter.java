@@ -1,4 +1,4 @@
-package com.iostate.exia.samples;
+package com.iostate.exia.solvers;
 
 import java.io.File;
 
@@ -8,7 +8,6 @@ import com.iostate.exia.ast.visitors.GenericSelector;
 import com.iostate.exia.ast.AstUtils;
 import com.iostate.exia.api.AstFunction;
 import com.iostate.exia.core.FileWalker;
-import com.iostate.exia.api.JavaSourceFileFilter;
 import org.eclipse.jdt.core.dom.*;
 
 /**

@@ -8,7 +8,7 @@ public class Main {
     String className = args[0];
     String[] paths = Arrays.copyOfRange(args, 1, args.length);
 
-    String basePackageName = "com.iostate.exia.samples";
+    String basePackageName = "com.iostate.exia.solvers";
     Class<?> clazz = Class.forName(basePackageName + "." + className);
     clazz.getDeclaredMethod("main", String[].class).invoke(null, (Object) paths);
   }
